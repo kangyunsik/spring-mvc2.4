@@ -44,6 +44,12 @@ public class ValidationItemControllerV3 {
     @PostMapping("/add")
     public String addItem(@Validated @ModelAttribute Item item, BindingResult bindingResult, RedirectAttributes redirectAttributes, Model model) {
 
+        if(item.getPrice() != null && item.getQuantity() != null){
+            int value = item.getPrice() * item.getQuantity();
+            if(value < 10000)
+            bindingResult.reject("totalPriceMin",new Object[]{10000, value},null);
+        }
+
         // 검증에 실패하면 다시 입력 폼으로
         if (bindingResult.hasErrors()) {
             log.info("errors = {}", bindingResult);
